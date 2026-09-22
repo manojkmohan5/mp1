@@ -1,2 +1,27 @@
-tool,what_it_was_used_for,log_link
-Claude Code (Anthropic Claude Opus),"Planned the page against the MP1 requirements, researched published Witcher IV facts and asset licensing, and generated the HTML, SCSS and JavaScript in src/. Also produced the video montage with ffmpeg and ran the browser QA pass.",REPLACE_WITH_SHARED_TRANSCRIPT_LINK
+Claude Code (Anthropic Claude Opus) - Planned the page against the MP1 requirements, researched published Witcher IV facts and asset licensing, and generated the HTML, SCSS and JavaScript in src/.
+Prompts: 
+Go through the repo and README first. Understand the MP1 requirements and grading rubric, and check the existing starter code. Don't change anything yet.
+I want to make the website about Witcher 4 "https://www.thewitcher.com/sg/en/witcher4". I want a dark cinematic game website style, something similar to a AAA game landing page. Help me figure out a good structure that can also cover all the MP1 requirements.
+Let's go with that structure. Start building the main HTML and SCSS. Keep the existing webpack/project setup and don't use any libraries that aren't allowed by the assignment.
+The page still feels a little like a school project. Can you make the design more polished and cinematic? Improve the typography, spacing, sections and overall visual hierarchy without making it too flashy.
+Now work on the navbar. Make it sticky, make it larger at the top and smaller after scrolling, including the font size. Also add smooth scrolling to the sections.
+Add the active section indicator to the navbar. Follow what the README says about detecting the section below the navbar, and make sure the last item gets highlighted when I reach the bottom.
+Let's work on the gallery now. Make it a proper carousel with the Witcher images, at least 3 slides, previous/next arrows and a smooth transition. Keep it vanilla JS.
+Can you improve the features section and make sure it satisfies the assignment requirement? I want it to look good on desktop but also collapse properly on smaller screens.
+Add a cinematic section using a fixed background image. Make it fit naturally with the rest of the page instead of looking like something added only for the requirement.
+Let's add the HTML5 video section now. Use the local video asset and make it responsive. Don't use YouTube or an iframe since the assignment specifically asks for the video tag.
+For the field notes section, make the cards open a modal with more information. The modal should close from the X, outside click, and Escape. Keep it accessible and make it match the rest of the design.
+Check the animations and transitions across the site. Add some subtle entrance/hover effects where they make sense, but don't overdo it.
+Check that we're actually using SCSS features properly, like variables, nesting and mixins. Clean up anything that's unnecessarily repetitive.
+Add the icons and social links we need for the requirement. Keep them consistent with the design and use scalable icons, not image files for the icons.
+Now focus on responsiveness. Test all the resolutions mentioned in the README and fix anything that overflows, overlaps or looks awkward, especially the navbar, carousel, modal and typography.
+Run the site and test all the interactions. Check the navbar resizing, smooth scrolling, active section indicator, carousel, modal, video and links. Fix any bugs you find.
+Now reread the README and compare the current website against every MP1 requirement. Don't change anything yet. Tell me anything we're missing or anything that might technically not satisfy the rubric.
+Fix the issues you found in that review. Don't unnecessarily redesign things that are already working.
+Do another code quality pass. Keep the code simple enough that I can understand and explain it. Clean up duplicated code, unused styles, weird JS logic or accessibility problems if you find any.
+Check the GitHub Pages setup and make sure the production build and asset paths will work under /mp1/. Don't change the provided deployment setup unless something actually needs fixing.
+The site is deployed now. Check the deployed version and compare it with what we had locally. Look for missing details.
+Do one final grading pass using the exact rubric in the README. Go through every category and tell me where it's implemented in the current code and anything that could still lose points.
+Also fact-check the Witcher 4 information we're showing. I don't want to present rumors or guesses as confirmed information. 
+Finally, check the LLM usage and source requirements in the README and llm_logs.csv. Tell me what I need to include for submission based on the work we've actually done. Don't make up any logs.
+Help me plan the 3 minute demo video now. Give me the shortest order to show all the important requirements on the deployed site without missing anything.

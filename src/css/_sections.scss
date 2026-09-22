@@ -1,0 +1,626 @@
+// =============================================================
+// Full-width horizontal stripes and their contents.
+// Every stripe spans the viewport; every inner wrapper is
+// horizontally centred by the container mixin.
+// =============================================================
+
+@use "tokens" as t;
+@use "mixins" as m;
+
+// -- Stripe scaffolding -----------------------------------------
+.stripe {
+  width: 100%;
+  padding-block: var(--space-6);
+
+  &--tight {
+    padding-block: var(--space-5);
+  }
+
+  &--alt {
+    background-color: var(--ink-700);
+  }
+
+  &__inner {
+    @include m.container;
+  }
+
+  &__head {
+    max-width: 72ch;
+    margin-inline: auto;
+    margin-bottom: var(--space-4);
+    text-align: center;
+
+    // The head already limits its own width, so nothing inside it needs
+    // the global paragraph measure. Left in place, that measure gives a
+    // child a narrower, flush-left box, and its centred text then reads
+    // as centred on the box rather than on the section.
+    > * {
+      max-width: none;
+    }
+
+    // Even out the line lengths rather than leaving one orphaned word.
+    h2,
+    .stripe__lede {
+      text-wrap: balance;
+    }
+  }
+
+  &__eyebrow {
+    @include m.eyebrow;
+
+    display: block;
+    margin-bottom: var(--space-1);
+  }
+
+  &__lede {
+    margin-inline: auto;
+    color: var(--muted);
+  }
+
+  @include m.respond-to("sm") {
+    padding-block: var(--space-5);
+  }
+}
+
+// Hairline divider used under every section heading.
+.rule {
+  width: 6rem;
+  height: 1px;
+  margin: var(--space-2) auto 0;
+  background: linear-gradient(90deg, transparent, var(--amber-500), transparent);
+}
+
+// -- Hero --------------------------------------------------------
+.hero {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  // The header sits in flow above this stripe at a constant height, so
+  // pulling the hero up by exactly that amount puts it behind the bar
+  // and leaves the document height unchanged.
+  margin-top: calc(var(--nav-h-top) * -1);
+  min-height: 100vh;
+
+  &__bg {
+    position: absolute;
+    inset: 0;
+    background: url("../assets/img/hero-bg.jpg") center 35% / cover no-repeat;
+    // Slow drift; keyframes live in _animations.
+    animation: ken-burns 28s var(--ease) infinite alternate;
+  }
+
+  // Dark enough to hold 4.5:1 contrast on the headline, light
+  // enough to leave the forest readable behind it.
+  &__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(
+        ellipse at 50% 58%,
+        rgb(7 8 10 / 18%) 0%,
+        rgb(7 8 10 / 76%) 78%
+      ),
+      linear-gradient(180deg, rgb(7 8 10 / 72%) 0%, rgb(7 8 10 / 18%) 32%),
+      linear-gradient(0deg, rgb(7 8 10 / 88%) 0%, rgb(7 8 10 / 0%) 26%);
+  }
+
+  // The vertically-centred element. Flex centring keeps it centred
+  // at every viewport height, which is the graded behaviour.
+  &__inner {
+    @include m.container;
+    @include m.center-both;
+
+    position: relative;
+    flex-direction: column;
+    text-align: center;
+    // Equal top and bottom padding. The top value clears the fixed
+    // navbar; matching it at the bottom keeps the flex-centred block
+    // on the true vertical centre at any hero height.
+    padding-block: calc(var(--nav-h-top) + var(--space-4));
+    min-height: 100vh;
+  }
+
+  &__eyebrow {
+    @include m.eyebrow;
+
+    margin-bottom: var(--space-2);
+  }
+
+  &__title {
+    margin-bottom: var(--space-2);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-shadow: 0 6px 40px rgb(0 0 0 / 80%);
+  }
+
+  &__numeral {
+    display: block;
+    margin-top: 0.15em;
+    color: var(--steel-300);
+    font-size: 0.55em;
+    letter-spacing: 0.4em;
+  }
+
+  &__tagline {
+    max-width: 46ch;
+    margin-inline: auto;
+    color: var(--parchment);
+    font-size: var(--step-1);
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-1) var(--space-3);
+    margin-block: var(--space-3);
+    color: var(--muted);
+    font-size: var(--step--1);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2);
+  }
+
+  &__scroll-cue {
+    position: absolute;
+    left: 50%;
+    bottom: var(--space-3);
+    translate: -50% 0;
+    color: var(--muted);
+    font-size: var(--step--1);
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    text-decoration: none;
+    animation: float 2.6s ease-in-out infinite;
+
+    &:hover {
+      color: var(--amber-400);
+    }
+  }
+
+  @include m.respond-to("sm") {
+    &__meta {
+      gap: var(--space-1) var(--space-2);
+    }
+  }
+}
+
+.btn {
+  @include m.button("solid");
+}
+
+.btn--ghost {
+  @include m.button("ghost");
+}
+
+// -- Saga: two-column editorial ----------------------------------
+.saga {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  // Stretch, not centre: the picture column matches the height of the
+  // copy beside it instead of floating in a band of dead space.
+  align-items: stretch;
+  gap: var(--space-5);
+
+  &__figure {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    border: 1px solid rgb(201 162 39 / 30%);
+    overflow: hidden;
+  }
+
+  &__img {
+    // Grows into whatever height the row ends up being, cropping
+    // rather than letterboxing to get there.
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    object-fit: cover;
+    object-position: 50% 45%;
+    transition: scale 0.8s var(--ease);
+  }
+
+  &__figure:hover &__img {
+    scale: 1.04;
+  }
+
+  &__caption {
+    position: relative;
+    padding: 0.75rem 1rem;
+    background-color: var(--ink-600);
+    color: var(--muted);
+    font-size: var(--step--1);
+
+    // The source stills carry a logo in one bottom corner and a
+    // disclaimer in the other. Cropping can only ever cut through one
+    // of them, so the picture is faded into this bar instead, which
+    // states the same disclaimer in words.
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 100%;
+      height: 5.5rem;
+      background: linear-gradient(to top, var(--ink-600), rgb(23 26 33 / 0%));
+      pointer-events: none;
+    }
+  }
+
+  &__body h2 {
+    margin-bottom: var(--space-2);
+  }
+
+  &__facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: 1px solid rgb(236 231 220 / 14%);
+  }
+
+  &__fact {
+    dt {
+      @include m.eyebrow;
+
+      font-size: 0.72rem;
+    }
+
+    dd {
+      margin: 0.2em 0 0;
+      font-family: var(--font-display);
+      font-size: var(--step-1);
+    }
+  }
+
+  @include m.respond-to("md") {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+
+    // Nothing to match heights with once the columns stack.
+    &__img {
+      flex: 0 0 auto;
+      aspect-ratio: 16 / 9;
+    }
+  }
+
+  @include m.respond-to("xs") {
+    &__facts {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+// -- Features: the multi-column stripe ---------------------------
+.features {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-3);
+
+  &__card {
+    padding: var(--space-3);
+    background-color: var(--ink-600);
+    border: 1px solid rgb(236 231 220 / 8%);
+    border-radius: var(--radius);
+    text-align: center;
+    transition:
+      transform 0.4s var(--ease),
+      border-color 0.4s var(--ease),
+      background-color 0.4s var(--ease);
+
+    &:hover {
+      transform: translateY(-6px);
+      border-color: rgb(201 162 39 / 45%);
+      background-color: var(--ink-500);
+    }
+  }
+
+  &__icon {
+    @include m.center-both;
+
+    width: 4rem;
+    height: 4rem;
+    margin: 0 auto var(--space-2);
+    border: 1px solid var(--amber-500);
+    border-radius: 50%;
+    color: var(--amber-400);
+    font-size: 1.5rem;
+  }
+
+  // Four abreast, so the heading has to sit a step below the
+  // default h3 or it wraps to three lines in every card.
+  &__title {
+    margin-bottom: var(--space-1);
+    font-size: var(--step-1);
+  }
+
+  &__text {
+    margin: 0;
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+
+  @include m.respond-to("lg") {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include m.respond-to("xs") {
+    grid-template-columns: 1fr;
+  }
+}
+
+// -- World: fixed-position background ----------------------------
+.world {
+  position: relative;
+  // The graded fixed background: parallaxes as the page scrolls.
+  background: url("../assets/img/world-bg.jpg") center / cover no-repeat fixed;
+  padding-block: calc(var(--space-6) * 1.6);
+
+  &__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgb(7 8 10 / 88%) 0%,
+      rgb(7 8 10 / 62%) 50%,
+      rgb(7 8 10 / 92%) 100%
+    );
+  }
+
+  &__inner {
+    @include m.container;
+
+    position: relative;
+    text-align: center;
+  }
+
+  &__quote {
+    max-width: 24ch;
+    margin: 0 auto var(--space-3);
+    font-family: var(--font-display);
+    font-size: var(--step-4);
+    line-height: 1.25;
+    text-wrap: balance;
+  }
+
+  &__attrib {
+    max-width: none;
+    margin: 0;
+    color: var(--amber-400);
+    font-family: var(--font-body);
+    font-size: var(--step--1);
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+  }
+
+  // background-attachment: fixed is ignored by mobile engines and
+  // repaints on every frame. Below the tablet breakpoint, pin it.
+  @include m.respond-to("sm") {
+    background-attachment: scroll;
+    background-position: center 30%;
+  }
+}
+
+// -- Media: HTML5 video ------------------------------------------
+.media {
+  &__frame {
+    max-width: 960px;
+    margin-inline: auto;
+    border: 1px solid rgb(201 162 39 / 30%);
+    background-color: var(--ink-900);
+    box-shadow: 0 30px 70px rgb(0 0 0 / 60%);
+  }
+
+  &__video {
+    display: block;
+    width: 100%;
+    background-color: var(--ink-900);
+  }
+
+  &__note {
+    max-width: 960px;
+    margin: var(--space-2) auto 0;
+    color: var(--muted);
+    font-size: var(--step--1);
+    text-align: center;
+  }
+
+  &__links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+  }
+}
+
+// -- Field notes: the modal triggers -----------------------------
+.notes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    background-color: var(--ink-600);
+    border: 1px solid rgb(236 231 220 / 8%);
+    border-radius: var(--radius);
+    overflow: hidden;
+    text-align: left;
+    cursor: pointer;
+    transition:
+      transform 0.4s var(--ease),
+      border-color 0.4s var(--ease);
+
+    &:hover,
+    &:focus-visible {
+      transform: translateY(-6px);
+      border-color: rgb(201 162 39 / 55%);
+    }
+
+    &:hover .notes__img,
+    &:focus-visible .notes__img {
+      scale: 1.06;
+    }
+  }
+
+  &__media {
+    @include m.ratio(16, 10);
+
+    overflow: hidden;
+  }
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: scale 0.6s var(--ease);
+  }
+
+  &__body {
+    padding: var(--space-2) var(--space-3) var(--space-3);
+  }
+
+  // The card is a <button>, so these are spans rather than real
+  // headings; they are blockified and styled to match the scale.
+  &__kind {
+    @include m.eyebrow;
+
+    display: block;
+    font-size: 0.7rem;
+  }
+
+  &__title {
+    display: block;
+    margin: 0.3em 0 0.4em;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--parchment);
+  }
+
+  &__teaser {
+    display: block;
+    margin: 0 0 var(--space-2);
+    color: var(--muted);
+    font-size: var(--step--1);
+    line-height: 1.6;
+  }
+
+  &__more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    color: var(--amber-400);
+    font-size: var(--step--1);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  @include m.respond-to("lg") {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include m.respond-to("xs") {
+    grid-template-columns: 1fr;
+  }
+}
+
+// -- Join: the last stripe before the footer ---------------------
+.join {
+  // Label above, input and button side by side, error message below.
+  // The button shares a row with the input so the two line up; when it
+  // sat in the same column as the label and the error it was pushed
+  // down by the space reserved for the message.
+  &__form {
+    display: flex;
+    flex-direction: column;
+    max-width: 34rem;
+    margin: var(--space-3) auto 0;
+  }
+
+  &__row {
+    display: flex;
+    // Stretch, so the button is exactly as tall as the field.
+    align-items: stretch;
+    gap: var(--space-2);
+  }
+
+  &__label {
+    display: block;
+    margin-bottom: 0.4em;
+    color: var(--muted);
+    font-size: var(--step--1);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-align: left;
+  }
+
+  &__input {
+    flex: 1;
+    min-width: 0;
+    padding: 0.85em 1em;
+    background-color: var(--ink-600);
+    border: 1px solid rgb(236 231 220 / 22%);
+    border-radius: var(--radius);
+    color: var(--parchment);
+    font: inherit;
+    font-size: var(--step--1);
+
+    &::placeholder {
+      color: rgb(168 164 156 / 80%);
+    }
+
+    &:focus {
+      border-color: var(--amber-500);
+    }
+
+    &[aria-invalid="true"] {
+      border-color: var(--blood);
+    }
+  }
+
+  &__submit {
+    flex-shrink: 0;
+  }
+
+  &__error {
+    display: block;
+    min-height: 1.4em;
+    margin-top: 0.5em;
+    color: #f0a3a9;
+    font-size: var(--step--1);
+    text-align: left;
+  }
+
+  &__status {
+    max-width: none;
+    margin-top: var(--space-2);
+    color: var(--amber-400);
+    font-size: var(--step--1);
+    text-align: center;
+  }
+
+  @include m.respond-to("xs") {
+    &__row {
+      flex-direction: column;
+    }
+
+    &__submit {
+      justify-content: center;
+    }
+  }
+}

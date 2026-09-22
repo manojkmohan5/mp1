@@ -1,0 +1,221 @@
+// =============================================================
+// Sticky navigation: resizes on scroll, carries the reading
+// position indicator, collapses to a disclosure menu on tablets.
+// =============================================================
+
+@use "tokens" as t;
+@use "mixins" as m;
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  // The header keeps a constant footprint in normal flow even though
+  // the bar inside it shrinks. If the header itself got shorter the
+  // document would lose those pixels mid-scroll and every anchor below
+  // would slide up underneath the bar. Only .nav__bar resizes.
+  height: #{t.$nav-height};
+
+  // Once the bar is compact there is a strip of header left over with
+  // nothing in it; let clicks through to the page behind it.
+  pointer-events: none;
+
+  // -- The visible bar ------------------------------------------
+  // Full-bleed, so it carries the background rather than .nav__inner,
+  // which is width-limited. Positioned, so the disclosure menu can
+  // hang off its bottom edge and follow it as it shrinks.
+  &__bar {
+    position: relative;
+    pointer-events: auto;
+    height: #{t.$nav-height};
+    background-color: rgb(7 8 10 / 35%);
+    border-bottom: 1px solid transparent;
+    transition:
+      height 0.35s var(--ease),
+      background-color 0.35s var(--ease),
+      border-color 0.35s var(--ease),
+      backdrop-filter 0.35s var(--ease),
+      box-shadow 0.35s var(--ease);
+  }
+
+  &__inner {
+    @include m.container;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    height: 100%;
+  }
+
+  // -- Wordmark -------------------------------------------------
+  &__brand {
+    display: flex;
+    align-items: baseline;
+    gap: 0.45em;
+    flex-shrink: 0;
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 900;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--parchment);
+    transition: font-size 0.35s var(--ease), color 0.25s var(--ease);
+
+    &:hover {
+      color: var(--amber-400);
+    }
+  }
+
+  &__numeral {
+    color: var(--steel-400);
+    font-size: 0.9em;
+  }
+
+  // -- Links ----------------------------------------------------
+  &__list {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.75rem, 1.6vw, 2rem);
+  }
+
+  &__link {
+    position: relative;
+    display: block;
+    padding: 0.5rem 0;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--parchment);
+    white-space: nowrap;
+    transition: color 0.25s var(--ease), font-size 0.35s var(--ease);
+
+    // The reading-position indicator itself.
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 2px;
+      background-color: var(--amber-500);
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform 0.35s var(--ease);
+    }
+
+    &:hover::after,
+    &:focus-visible::after {
+      transform: scaleX(1);
+    }
+
+    // Active state is signalled by colour AND a rule AND aria-current,
+    // never by colour alone. WCAG 2.1 AA 1.4.1.
+    &.is-active {
+      color: var(--amber-400);
+
+      &::after {
+        transform: scaleX(1);
+      }
+    }
+  }
+
+  // -- Disclosure button ----------------------------------------
+  &__toggle {
+    display: none;
+    padding: 0.5rem 0.75rem;
+    background: none;
+    border: 1px solid rgb(236 231 220 / 35%);
+    border-radius: var(--radius);
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: border-color 0.25s var(--ease), color 0.25s var(--ease);
+
+    &:hover {
+      border-color: var(--amber-500);
+      color: var(--amber-400);
+    }
+  }
+
+  // -- Scrolled state -------------------------------------------
+  // Smaller bar, smaller type, solid background.
+  &.is-scrolled {
+    .nav__bar {
+      height: #{t.$nav-height-compact};
+      background-color: rgb(7 8 10 / 94%);
+      border-bottom-color: rgb(201 162 39 / 28%);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgb(0 0 0 / 45%);
+    }
+
+    .nav__brand {
+      font-size: 1.05rem;
+    }
+
+    .nav__link {
+      font-size: 0.82rem;
+    }
+  }
+
+  // -- Collapsed layout -----------------------------------------
+  @include m.respond-to("md") {
+    &__toggle {
+      display: block;
+    }
+
+    &__menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      // Fully opaque: the page scrolls underneath this panel and
+      // any translucency makes both layers unreadable.
+      background-color: var(--ink-900);
+      border-bottom: 1px solid rgb(201 162 39 / 28%);
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s var(--ease);
+    }
+
+    &__menu.is-open {
+      max-height: 32rem;
+    }
+
+    &__list {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      padding: var(--space-2) var(--space-3);
+    }
+
+    &__link {
+      padding: 0.9rem 0;
+      font-size: 1rem;
+      border-bottom: 1px solid rgb(236 231 220 / 10%);
+
+      &::after {
+        width: 2px;
+        height: 100%;
+        top: 0;
+        bottom: auto;
+        transform: scaleY(0);
+        transform-origin: center top;
+      }
+
+      &:hover::after,
+      &:focus-visible::after,
+      &.is-active::after {
+        transform: scaleY(1);
+      }
+    }
+
+    &.is-scrolled .nav__link {
+      font-size: 1rem;
+    }
+  }
+}

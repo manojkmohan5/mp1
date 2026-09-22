@@ -1,0 +1,133 @@
+// =============================================================
+// Footer: sitemap, social icons, required attribution.
+// =============================================================
+
+@use "tokens" as t;
+@use "mixins" as m;
+
+.footer {
+  padding-block: var(--space-5) var(--space-3);
+  background-color: var(--ink-900);
+  border-top: 1px solid rgb(201 162 39 / 22%);
+
+  &__inner {
+    @include m.container;
+  }
+
+  &__top {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: var(--space-4);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid rgb(236 231 220 / 12%);
+  }
+
+  &__brand {
+    display: block;
+    margin-bottom: var(--space-2);
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 900;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--parchment);
+    text-decoration: none;
+  }
+
+  &__blurb {
+    max-width: 38ch;
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+
+  &__heading {
+    @include m.eyebrow;
+
+    display: block;
+    margin-bottom: var(--space-2);
+    font-size: 0.72rem;
+  }
+
+  &__list li + li {
+    margin-top: 0.6em;
+  }
+
+  &__link {
+    color: var(--muted);
+    font-size: var(--step--1);
+    text-decoration: none;
+    transition: color 0.25s var(--ease);
+
+    &:hover,
+    &:focus-visible {
+      color: var(--amber-400);
+    }
+  }
+
+  // -- Social icons ----------------------------------------------
+  &__social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: var(--space-2);
+  }
+
+  &__social-link {
+    @include m.center-both;
+
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid rgb(236 231 220 / 24%);
+    border-radius: 50%;
+    color: var(--parchment);
+    font-size: 1.05rem;
+    text-decoration: none;
+    transition:
+      background-color 0.3s var(--ease),
+      border-color 0.3s var(--ease),
+      color 0.3s var(--ease),
+      transform 0.3s var(--ease);
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--amber-500);
+      border-color: var(--amber-500);
+      color: var(--ink-900);
+      transform: translateY(-3px);
+    }
+  }
+
+  // -- Legal -----------------------------------------------------
+  &__legal {
+    padding-top: var(--space-3);
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+
+  &__disclaimer {
+    max-width: none;
+    padding: var(--space-2);
+    background-color: var(--ink-700);
+    border-left: 2px solid var(--amber-500);
+    border-radius: var(--radius);
+    color: var(--parchment);
+  }
+
+  &__credits {
+    margin-bottom: 0;
+    max-width: none;
+  }
+
+  @include m.respond-to("md") {
+    &__top {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @include m.respond-to("xs") {
+    &__top {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+    }
+  }
+}

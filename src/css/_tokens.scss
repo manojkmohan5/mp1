@@ -1,0 +1,97 @@
+// =============================================================
+// Design tokens.
+// SCSS variables drive build-time logic (maps, mixins, math);
+// the :root block re-publishes them as CSS custom properties so
+// JavaScript and media queries can read the same single source.
+// =============================================================
+
+@use "sass:map";
+
+// -- Breakpoints ------------------------------------------------
+// Keyed to the five resolutions the assignment is graded at.
+$breakpoints: (
+  "xs": 560px,
+  "sm": 768px,   // 768x1024 portrait tablet
+  "md": 992px,
+  "lg": 1200px,  // 1280x720
+  "xl": 1400px   // 1366x768 and up
+);
+
+// -- Palette ----------------------------------------------------
+$ink-900: #07080a;
+$ink-800: #0b0c0f;
+$ink-700: #111319;
+$ink-600: #171a21;
+$ink-500: #20242d;
+
+$parchment: #ece7dc;
+$muted: #a8a49c;
+
+$amber-400: #e0b84a;
+$amber-500: #c9a227;
+$amber-600: #9d7d1a;
+
+$steel-300: #b9d6e2;
+$steel-400: #8fb8c9;
+$blood: #93313a;
+
+// -- Type -------------------------------------------------------
+$font-display: "Cinzel", "Georgia", "Times New Roman", serif;
+$font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+// -- Geometry ---------------------------------------------------
+$container: 1280px;
+$nav-height: 5.5rem;
+$nav-height-compact: 4rem;
+$radius: 4px;
+$ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+// -- Runtime tokens ---------------------------------------------
+:root {
+  --ink-900: #{$ink-900};
+  --ink-800: #{$ink-800};
+  --ink-700: #{$ink-700};
+  --ink-600: #{$ink-600};
+  --ink-500: #{$ink-500};
+
+  --parchment: #{$parchment};
+  --muted: #{$muted};
+
+  --amber-400: #{$amber-400};
+  --amber-500: #{$amber-500};
+  --amber-600: #{$amber-600};
+
+  --steel-300: #{$steel-300};
+  --steel-400: #{$steel-400};
+  --blood: #{$blood};
+
+  --font-display: #{$font-display};
+  --font-body: #{$font-body};
+
+  --container: #{$container};
+  --radius: #{$radius};
+  --ease: #{$ease};
+
+  // Both navbar heights, and both static. Nothing rewrites these at
+  // runtime: the hero sizes itself from --nav-h-top, so if that value
+  // changed mid-scroll the hero would resize, the document would get
+  // shorter, and every anchor below it would slide up under the bar.
+  --nav-h-top: #{$nav-height};
+  --nav-h-compact: #{$nav-height-compact};
+
+  // Fluid type scale: clamp(min, preferred, max).
+  --step--1: clamp(0.83rem, 0.79rem + 0.20vw, 0.95rem);
+  --step-0: clamp(1rem, 0.95rem + 0.25vw, 1.13rem);
+  --step-1: clamp(1.2rem, 1.11rem + 0.45vw, 1.5rem);
+  --step-2: clamp(1.35rem, 1.24rem + 0.55vw, 1.7rem);
+  --step-3: clamp(1.6rem, 1.42rem + 0.9vw, 2.15rem);
+  --step-4: clamp(1.9rem, 1.6rem + 1.5vw, 2.8rem);
+  --step-5: clamp(2.5rem, 1.7rem + 4vw, 4.6rem);
+
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+  --space-5: 4rem;
+  --space-6: 4.75rem;
+}

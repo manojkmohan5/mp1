@@ -1,0 +1,175 @@
+// =============================================================
+// Gallery carousel: slides, side arrows, dot pagination.
+// Layout only — carousel.js owns the state.
+// =============================================================
+
+@use "tokens" as t;
+@use "mixins" as m;
+
+.carousel {
+  position: relative;
+  max-width: 1120px;
+  margin-inline: auto;
+
+  // 16:9, but never taller than the window on a 720p-class screen,
+  // which is one of the graded resolutions. Slides use object-fit
+  // so cropping rather than letterboxing takes up the slack.
+  &__viewport {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgb(201 162 39 / 30%);
+    background-color: var(--ink-900);
+    @include m.ratio(16, 9);
+
+    max-height: 66vh;
+  }
+
+  &__slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.7s var(--ease),
+      scale 0.7s var(--ease);
+    scale: 1.03;
+
+    &.is-current {
+      opacity: 1;
+      visibility: visible;
+      scale: 1;
+    }
+  }
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: var(--space-4) var(--space-3) var(--space-2);
+    background: linear-gradient(180deg, transparent, rgb(7 8 10 / 92%));
+    text-align: left;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: var(--step-1);
+  }
+
+  &__text {
+    margin: 0.2em 0 0;
+    max-width: 60ch;
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+
+  // -- Arrows ----------------------------------------------------
+  &__arrow {
+    @include m.center-both;
+
+    position: absolute;
+    top: 50%;
+    translate: 0 -50%;
+    z-index: 2;
+    width: 3.25rem;
+    height: 3.25rem;
+    background-color: rgb(7 8 10 / 72%);
+    border: 1px solid rgb(201 162 39 / 45%);
+    border-radius: 50%;
+    color: var(--parchment);
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition:
+      background-color 0.3s var(--ease),
+      color 0.3s var(--ease),
+      scale 0.3s var(--ease);
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--amber-500);
+      color: var(--ink-900);
+      scale: 1.08;
+    }
+
+    &--prev {
+      left: calc(var(--space-2) * -1);
+    }
+
+    &--next {
+      right: calc(var(--space-2) * -1);
+    }
+  }
+
+  // -- Dots ------------------------------------------------------
+  &__dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: var(--space-3);
+  }
+
+  &__dot {
+    width: 2.5rem;
+    height: 3px;
+    padding: 0;
+    background-color: rgb(236 231 220 / 26%);
+    border: 0;
+    cursor: pointer;
+    transition:
+      background-color 0.3s var(--ease),
+      scale 0.3s var(--ease);
+
+    &:hover {
+      background-color: rgb(236 231 220 / 55%);
+    }
+
+    &[aria-selected="true"] {
+      background-color: var(--amber-500);
+      scale: 1 2;
+    }
+  }
+
+  // Overrides the global p max-width, which would otherwise make the
+  // centred text sit left of the carousel's real centre.
+  &__counter {
+    max-width: none;
+    margin-top: var(--space-1);
+    color: var(--muted);
+    font-size: var(--step--1);
+    letter-spacing: 0.2em;
+    text-align: center;
+  }
+
+  // On narrow viewports the arrows move inside the frame so they
+  // never overflow the page gutter.
+  @include m.respond-to("md") {
+    &__arrow {
+      width: 2.75rem;
+      height: 2.75rem;
+
+      &--prev {
+        left: var(--space-1);
+      }
+
+      &--next {
+        right: var(--space-1);
+      }
+    }
+
+    &__caption {
+      padding-inline: var(--space-2);
+    }
+  }
+
+  @include m.respond-to("xs") {
+    &__text {
+      display: none;
+    }
+  }
+}

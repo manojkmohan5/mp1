@@ -1,0 +1,115 @@
+// =============================================================
+// CSS3 keyframe animations and the scroll-reveal states.
+// =============================================================
+
+@use "mixins" as m;
+
+// Slow push-in on the hero background.
+@keyframes ken-burns {
+  from {
+    scale: 1;
+    translate: 0 0;
+  }
+  to {
+    scale: 1.12;
+    translate: 0 -2%;
+  }
+}
+
+// Staggered entrance for the hero copy.
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    translate: 0 28px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+// Bob on the scroll cue.
+@keyframes float {
+  0%,
+  100% {
+    translate: -50% 0;
+  }
+  50% {
+    translate: -50% 8px;
+  }
+}
+
+// Amber sweep behind the section headings.
+@keyframes ember {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+// -- Hero entrance -----------------------------------------------
+// Each child starts invisible and is animated in on a delay.
+.anim-rise {
+  opacity: 0;
+  animation: rise-in 0.9s var(--ease) forwards;
+}
+
+@for $i from 1 through 6 {
+  .anim-rise--#{$i} {
+    animation-delay: #{0.15 * $i}s;
+  }
+}
+
+.rule {
+  animation: ember 4s ease-in-out infinite;
+}
+
+// -- Scroll reveal ------------------------------------------------
+// reveal.js adds .is-revealed when the element enters the viewport.
+.reveal {
+  opacity: 0;
+  translate: 0 32px;
+  transition:
+    opacity 0.7s var(--ease),
+    translate 0.7s var(--ease);
+
+  &.is-revealed {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+// Children of a revealing group cascade in.
+@for $i from 1 through 6 {
+  .reveal--#{$i} {
+    transition-delay: #{0.1 * $i}s;
+  }
+}
+
+// If the observer never runs (no JS, or an old engine), nothing
+// should stay invisible.
+.no-js .reveal,
+.no-js .anim-rise {
+  opacity: 1;
+  translate: 0 0;
+  animation: none;
+}
+
+// Motion opt-out: show everything in place, skip the movement.
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .anim-rise {
+    opacity: 1;
+    translate: 0 0;
+    animation: none;
+  }
+
+  .hero__bg,
+  .hero__scroll-cue,
+  .rule {
+    animation: none;
+  }
+}

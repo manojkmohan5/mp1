@@ -1,0 +1,16 @@
+// =============================================================
+// The Witcher IV product page - stylesheet entry point.
+//
+// Partials are loaded with @use so each module resolves its own
+// dependencies and nothing leaks into the global scope.
+// Order matters only for the cascade, not for resolution.
+// =============================================================
+
+@use "tokens";
+@use "base";
+@use "nav";
+@use "sections";
+@use "carousel";
+@use "modal";
+@use "footer";
+@use "animations";

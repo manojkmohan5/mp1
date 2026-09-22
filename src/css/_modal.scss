@@ -1,0 +1,168 @@
+// =============================================================
+// Modal dialog. One instance in the markup; modal.js swaps the
+// content in from the card that opened it.
+// =============================================================
+
+@use "tokens" as t;
+@use "mixins" as m;
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+  // Hidden from assistive tech and pointer events until opened.
+  // visibility is a discrete property: transitioning it would flip
+  // it halfway through, leaving the panel unfocusable for 150ms.
+  // Delay it on the way out instead, and switch it instantly on
+  // the way in, so focus can move into the dialog immediately.
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity 0.3s var(--ease),
+    visibility 0s linear 0.3s;
+
+  &.is-open {
+    visibility: visible;
+    opacity: 1;
+    transition:
+      opacity 0.3s var(--ease),
+      visibility 0s linear 0s;
+  }
+
+  &__backdrop {
+    position: absolute;
+    inset: 0;
+    background-color: rgb(4 5 7 / 82%);
+    backdrop-filter: blur(6px);
+  }
+
+  &__panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: min(56rem, 100%);
+    max-height: min(85vh, 46rem);
+    background-color: var(--ink-700);
+    border: 1px solid rgb(201 162 39 / 40%);
+    border-radius: var(--radius);
+    box-shadow: 0 40px 90px rgb(0 0 0 / 70%);
+    overflow: hidden;
+    // Slides up as it fades in; reset by .is-open.
+    translate: 0 18px;
+    scale: 0.98;
+    transition:
+      translate 0.35s var(--ease),
+      scale 0.35s var(--ease);
+  }
+
+  &.is-open &__panel {
+    translate: 0 0;
+    scale: 1;
+  }
+
+  &__close {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    z-index: 2;
+    @include m.center-both;
+
+    width: 2.75rem;
+    height: 2.75rem;
+    background-color: rgb(7 8 10 / 76%);
+    border: 1px solid rgb(236 231 220 / 26%);
+    border-radius: 50%;
+    color: var(--parchment);
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition:
+      background-color 0.25s var(--ease),
+      color 0.25s var(--ease),
+      rotate 0.35s var(--ease);
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--amber-500);
+      color: var(--ink-900);
+      rotate: 90deg;
+    }
+  }
+
+  // Capped in viewport units as well as by ratio, so a short
+  // window gives the text room instead of all the picture.
+  &__media {
+    flex-shrink: 0;
+    @include m.ratio(21, 9);
+
+    max-height: 34vh;
+    overflow: hidden;
+  }
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__body {
+    padding: var(--space-3);
+    overflow-y: auto;
+    // A default scrollbar is a white slab on this palette.
+    scrollbar-width: thin;
+    scrollbar-color: var(--amber-600) var(--ink-600);
+  }
+
+  &__kind {
+    @include m.eyebrow;
+
+    display: block;
+    font-size: 0.72rem;
+  }
+
+  &__title {
+    margin: 0.25em 0 var(--space-2);
+  }
+
+  &__text {
+    color: var(--muted);
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: 1px solid rgb(236 231 220 / 14%);
+  }
+
+  &__stat {
+    dt {
+      @include m.eyebrow;
+
+      font-size: 0.68rem;
+    }
+
+    dd {
+      margin: 0.2em 0 0;
+      color: var(--parchment);
+      font-size: var(--step--1);
+    }
+  }
+
+  @include m.respond-to("sm") {
+    padding: var(--space-2);
+
+    &__media {
+      aspect-ratio: 16 / 9;
+    }
+
+    &__list {
+      grid-template-columns: 1fr;
+    }
+  }
+}
